@@ -1,0 +1,42 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Ensure Windows line endings (CRLF) for Unity files
+*.cs text eol=crlf
+*.meta text eol=crlf
+*.shader text eol=crlf
+*.json text eol=crlf
+*.txt text eol=crlf
+
+# Treat images as binary (prevent line ending changes)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.tga binary
+*.psd binary
+
+# Treat audio files as binary
+*.wav binary
+*.mp3 binary
+*.ogg binary
+*.flac binary
+
+# Treat video files as binary
+*.mp4 binary
+*.mov binary
+*.avi binary
+
+# Treat 3D model files as binary
+*.fbx binary
+*.obj binary
+*.blend binary
+
+# Unity-specific binary formats
+*.unity binary
+*.prefab binary
+*.asset binary
+*.controller binary
+*.anim binary
+*.ttf binary
+*.otf binary
