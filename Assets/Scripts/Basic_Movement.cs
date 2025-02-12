@@ -24,4 +24,21 @@ public class Basic_Movement : MonoBehaviour
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
     }
+
+    //private void OnCollisionEnter(Collision collision)
+    //{
+    //    if (collision.GetContact(0).otherCollider.CompareTag("Obstacle"))
+    //    {
+    //        Debug.Log("Collided with obstacle");
+    //        runner.follow = false;
+    //    }
+    //}
+
+    //private void OnCollisionExit(Collision collision)
+    //{
+    //    if (collision.GetContact(0).otherCollider.CompareTag("Obstacle"))
+    //    {
+    //        runner.follow = true;
+    //    }
+    //}
 }
