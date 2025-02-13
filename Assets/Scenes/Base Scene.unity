@@ -510,7 +510,7 @@ MonoBehaviour:
   _useUnloadUnusedAssets: 0
   _loopSegmentLogic: 0
   _levelCollection:
-  - {fileID: 11400000, guid: 864cadc1cdc4fd74ab981b01b35c4439, type: 2}
+  - {fileID: 11400000, guid: a1f01033c356abf4eab7da8eb967fe63, type: 2}
   _levelIteration: 1
   _levelRandomizer: {fileID: 0}
   _generationRandomizer: {fileID: 11400000, guid: fb600be43607d7e47822c78754644d57, type: 2}
@@ -601,6 +601,10 @@ PrefabInstance:
     - target: {fileID: 3718323815469775228, guid: 79ae9d91d3a98244abb97925350c2e6b, type: 3}
       propertyPath: m_Name
       value: Test Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 3718323815469775228, guid: 79ae9d91d3a98244abb97925350c2e6b, type: 3}
+      propertyPath: m_TagString
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 7450856893782799630, guid: 79ae9d91d3a98244abb97925350c2e6b, type: 3}
       propertyPath: m_ExcludeLayers.m_Bits
