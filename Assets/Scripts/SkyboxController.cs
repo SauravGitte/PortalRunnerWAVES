@@ -19,28 +19,16 @@ public class SkyboxController : MonoBehaviour
         }
 
         // Capture the current skybox dynamically
-        if (RenderSettings.skybox != null && RenderSettings.skybox.HasProperty("_Tex"))
-        {
-            skyboxA = RenderSettings.skybox.GetTexture("_Tex") as Cubemap;
-        }
-
-        if (skyboxA == null)
-        {
-            Debug.LogWarning("No initial skybox found! Using default cubemap.");
-            skyboxA = skyboxB; // Fallback to avoid errors
-        }
-
-        // Assign both skyboxes to the blend material
-        skyboxBlendMaterial.SetTexture("_CubemapA", skyboxA);
-        skyboxBlendMaterial.SetTexture("_CubemapB", skyboxB);
-        skyboxBlendMaterial.SetFloat("_BlendFactor", 0);
-
-        RenderSettings.skybox = skyboxBlendMaterial;
+        
+        
     }
 
     public void ChangeSkybox()
     {
-        StopAllCoroutines();
+        skyboxBlendMaterial.SetTexture("_CubemapA", skyboxBlendMaterial.GetTexture("_CubemapB"));
+        skyboxBlendMaterial.SetTexture("_CubemapB", skyboxB);
+        skyboxBlendMaterial.SetFloat("_BlendFactor", 0);
+        RenderSettings.skybox = skyboxBlendMaterial;
         StartCoroutine(TransitionSkybox());
     }
 
