@@ -20,6 +20,7 @@ public class GrappleGun : MonoBehaviour
         lineRenderer.startColor = defaultColor;
         lineRenderer.endColor = defaultColor;
         lineRenderer.startWidth = 0.1f; // Set width for laser effect
+        lineRenderer.positionCount = 2;
     }
 
     private void Update()
@@ -56,7 +57,6 @@ public class GrappleGun : MonoBehaviour
             joint.spring = spring;
             joint.damper = damper;
             joint.massScale = massF;
-            lineRenderer.positionCount = 2;
 
             // Change line color to grapple color
             lineRenderer.startColor = grappleColor;
@@ -66,7 +66,6 @@ public class GrappleGun : MonoBehaviour
 
     void StopGrapple()
     {
-        lineRenderer.positionCount = 0;
         Destroy(joint);
 
         // Reset line color to default
@@ -76,11 +75,17 @@ public class GrappleGun : MonoBehaviour
 
     void DrawLine()
     {
-        if(!joint)
+        if (joint)
         {
-            return;
+            lineRenderer.SetPosition(0, transform.position);
+            lineRenderer.SetPosition(1, grapplePoint);
         }
-        lineRenderer.SetPosition(0, transform.position);
-        lineRenderer.SetPosition(1, grapplePoint);
+        else
+        {
+            // Render the line renderer in the forward direction of the camera
+            Vector3 endPosition = Camera.main.transform.position + Camera.main.transform.forward * 100f; // 100f is the distance
+            lineRenderer.SetPosition(0, transform.position);
+            lineRenderer.SetPosition(1, endPosition);
+        }
     }
 }
