@@ -1,7 +1,8 @@
 fileFormatVersion: 2
-guid: 1db82396e54137e499aaf6d4f256b841
+guid: 7baa0d1cc3b5f744aa07790170949167
+timeCreated: 1496225937
+licenseType: Store
 MonoImporter:
-  externalObjects: {}
   serializedVersion: 2
   defaultReferences: []
   executionOrder: 0
@@ -11,8 +12,8 @@ MonoImporter:
   assetBundleVariant: 
 AssetOrigin:
   serializedVersion: 1
-  productId: 140926
-  packageName: Forever - Endless Runner Engine
-  packageVersion: 1.17
+  productId: 61926
+  packageName: Dreamteck Splines
+  packageVersion: 3.0.6
   assetPath: Assets/Dreamteck/Splines/Core/SplinePrefs.cs
-  uploadId: 707472
+  uploadId: 697417
