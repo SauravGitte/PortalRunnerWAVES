@@ -34,10 +34,6 @@ namespace EZHover
         [Header("Gizmo Settings")]
         [SerializeField] bool drawMoveDirectionLine = true;
 
-        [Header("Downward Force Settings")]
-        [SerializeField] private float downwardForce = 50f;
-        public float downwardHeight { get { return downwardForce; } set { downwardForce = value; } }
-
         Rigidbody rb;
         HoverGrid hoverGrid;
 
@@ -73,13 +69,14 @@ namespace EZHover
             }
 
             Vector3 moveDir = GetMoveDirection();
+
             Vector3 start = hoverGrid.GetDirectionPointOnGridBounds(moveDir);
 
             if (drawMoveDirectionLine)
             {
                 Debug.DrawLine(start, start + (moveDir * obstacleDetectionRange), Color.red);
             }
-
+            
             if (!enableObstacleAvoidance)
             {
                 rb.AddForce(moveDir * moveSpeed, ForceMode.Acceleration);
@@ -90,9 +87,14 @@ namespace EZHover
 
             if (isHit)
             {
+                // Apply more repulsion and hover boost when closer to obstacle
                 float closenessMult = (1 - (hit.distance / obstacleDetectionRange));
+
                 Vector3 moveForce = moveDir * moveSpeed;
-                float steepnessMult = 1 - Mathf.Clamp(Vector3.Dot(hit.normal, Vector3.up), 0.0f, 1.0f);
+
+                // More repulsion force applied when facing a steep incline
+                float steepnessMult = 1- Mathf.Clamp(Vector3.Dot(hit.normal, Vector3.up), 0.0f, 1.0f);
+
                 Vector3 repulsionForce = -moveDir * closenessMult * repulsionSpeed * steepnessMult;
                 Vector3 hoverForce = new Vector3(0, hoverBoost * closenessMult, 0);
 
@@ -103,16 +105,6 @@ namespace EZHover
                 rb.AddForce(moveDir * moveSpeed, ForceMode.Acceleration);
             }
 
-            // Apply downward force only when flying high above the ground
-            if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit ghit) && ghit.distance > downwardHeight)
-            {
-                rb.AddForce(Vector3.down * downwardForce, ForceMode.Acceleration);
-            }
-            // Apply downward force only when flying high in the air
-            if (rb.position.y > downwardHeight) // Adjust the height threshold as needed
-            {
-                rb.AddForce(Vector3.down * downwardForce, ForceMode.Acceleration);
-            }
         }
         private Vector3 GetMoveDirection()
         {
@@ -137,5 +129,4 @@ namespace EZHover
             moveDir = moveDirection.normalized;
         }
     }
-    
 }
