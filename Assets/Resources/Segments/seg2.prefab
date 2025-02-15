@@ -109,8 +109,8 @@ Rigidbody:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
+  m_ImplicitCom: 0
+  m_ImplicitTensor: 0
   m_UseGravity: 1
   m_IsKinematic: 1
   m_Interpolate: 0
@@ -133,7 +133,7 @@ MonoBehaviour:
   customExit: {fileID: 0}
   customKeepUpright: 0
   _customMainPath: -1
-  axis: 2
+  axis: 0
   customPaths: []
   objectProperties:
   - transform: {fileID: 5463705064580066113}
