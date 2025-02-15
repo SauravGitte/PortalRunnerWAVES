@@ -109,8 +109,8 @@ Rigidbody:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
+  m_ImplicitCom: 0
+  m_ImplicitTensor: 0
   m_UseGravity: 1
   m_IsKinematic: 1
   m_Interpolate: 0
@@ -178,7 +178,7 @@ MonoBehaviour:
     min: {x: -90.00055, y: -5.0653954, z: -48.016113}
     size: {x: 180.00061, y: 23.91986, z: 96.01611}
   builders: []
-  unpacked: 0
+  unpacked: 1
   alwaysDraw: 0
   drawGeneratedSpline: 1
   drawGeneratedSamples: 1
@@ -186,7 +186,7 @@ MonoBehaviour:
   drawEntranceAndExit: 1
   drawBounds: 1
   drawCustomPaths: 1
-  editorChildCount: 1
+  editorChildCount: 0
 --- !u!64 &5467101254518580385
 MeshCollider:
   m_ObjectHideFlags: 0
