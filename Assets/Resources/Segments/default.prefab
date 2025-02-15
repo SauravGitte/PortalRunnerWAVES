@@ -176,6 +176,7 @@ MonoBehaviour:
     extrudedCollisionMesh: {fileID: 0}
     _extrusionSettings:
       meshColliderHandling: 1
+      bendSpline: 0
       boundsInclusion: -1
       indexing: 0
       applyRotation: 1
@@ -191,6 +192,8 @@ MonoBehaviour:
     meshFilter: {fileID: 4547883034656417633}
     meshCollider: {fileID: 8530296752931049905}
     spriteRenderer: {fileID: 0}
+    splineComputer: {fileID: 0}
+    editSplinePoints: []
     colliders:
     - {fileID: 8530296752931049905}
     _isRoot: 1
@@ -208,6 +211,7 @@ MonoBehaviour:
     extrudedCollisionMesh: {fileID: 0}
     _extrusionSettings:
       meshColliderHandling: 0
+      bendSpline: 0
       boundsInclusion: 0
       indexing: 0
       applyRotation: 1
@@ -223,6 +227,8 @@ MonoBehaviour:
     meshFilter: {fileID: 2149709003849486084}
     meshCollider: {fileID: 0}
     spriteRenderer: {fileID: 0}
+    splineComputer: {fileID: 0}
+    editSplinePoints: []
     colliders:
     - {fileID: 6649897705814408772}
     _isRoot: 0
@@ -240,6 +246,7 @@ MonoBehaviour:
     extrudedCollisionMesh: {fileID: 0}
     _extrusionSettings:
       meshColliderHandling: 0
+      bendSpline: 0
       boundsInclusion: 0
       indexing: 0
       applyRotation: 1
@@ -255,6 +262,8 @@ MonoBehaviour:
     meshFilter: {fileID: 8245568502294650083}
     meshCollider: {fileID: 0}
     spriteRenderer: {fileID: 0}
+    splineComputer: {fileID: 0}
+    editSplinePoints: []
     colliders:
     - {fileID: 3743131849103568291}
     _isRoot: 0
@@ -272,6 +281,7 @@ MonoBehaviour:
     extrudedCollisionMesh: {fileID: 0}
     _extrusionSettings:
       meshColliderHandling: 0
+      bendSpline: 0
       boundsInclusion: 0
       indexing: 0
       applyRotation: 1
@@ -287,6 +297,8 @@ MonoBehaviour:
     meshFilter: {fileID: 3680782708718229051}
     meshCollider: {fileID: 0}
     spriteRenderer: {fileID: 0}
+    splineComputer: {fileID: 0}
+    editSplinePoints: []
     colliders:
     - {fileID: 8253028935468853115}
     _isRoot: 0
@@ -304,6 +316,7 @@ MonoBehaviour:
     extrudedCollisionMesh: {fileID: 0}
     _extrusionSettings:
       meshColliderHandling: 0
+      bendSpline: 0
       boundsInclusion: 0
       indexing: 0
       applyRotation: 1
@@ -319,6 +332,8 @@ MonoBehaviour:
     meshFilter: {fileID: 1241584391906232512}
     meshCollider: {fileID: 0}
     spriteRenderer: {fileID: 0}
+    splineComputer: {fileID: 0}
+    editSplinePoints: []
     colliders:
     - {fileID: 5811504051981220224}
     _isRoot: 0
