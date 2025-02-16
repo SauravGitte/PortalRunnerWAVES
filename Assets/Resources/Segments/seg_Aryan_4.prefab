@@ -178,7 +178,7 @@ MonoBehaviour:
     min: {x: -90.00055, y: -5.0653954, z: -48.016113}
     size: {x: 180.00061, y: 23.91986, z: 96.01611}
   builders: []
-  unpacked: 1
+  unpacked: 0
   alwaysDraw: 0
   drawGeneratedSpline: 1
   drawGeneratedSamples: 1
@@ -186,7 +186,7 @@ MonoBehaviour:
   drawEntranceAndExit: 1
   drawBounds: 1
   drawCustomPaths: 1
-  editorChildCount: 0
+  editorChildCount: 1
 --- !u!64 &5467101254518580385
 MeshCollider:
   m_ObjectHideFlags: 0
