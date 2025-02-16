@@ -15,7 +15,7 @@ RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 10
   m_Fog: 0
-  m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  m_FogColor: {r: 0, g: 0, b: 0, a: 1}
   m_FogMode: 3
   m_FogDensity: 0.01
   m_LinearFogStart: 0
@@ -869,6 +869,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 780bbaa04b200b444926d77662700ec5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canGrapple:
+    serializedVersion: 2
+    m_Bits: 0
+  Player: {fileID: 0}
+  maxD: 0
+  minD: 0
+  spring: 0
+  damper: 0
+  massF: 0
 --- !u!120 &1387118997
 LineRenderer:
   serializedVersion: 2
