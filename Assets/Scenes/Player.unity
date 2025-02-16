@@ -825,6 +825,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 571237299109046419, guid: c8b6e9a34f43d6a4fbdc18b99cb50b83, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 5.8
+      objectReference: {fileID: 0}
     - target: {fileID: 728096047208174749, guid: c8b6e9a34f43d6a4fbdc18b99cb50b83, type: 3}
       propertyPath: m_Layer
       value: 8
@@ -1134,8 +1138,16 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 9167601043703245026, guid: c8b6e9a34f43d6a4fbdc18b99cb50b83, type: 3}
+      propertyPath: maxHoverThrust
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 9167601043703245026, guid: c8b6e9a34f43d6a4fbdc18b99cb50b83, type: 3}
       propertyPath: stabalizeForce
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 9167601043703245026, guid: c8b6e9a34f43d6a4fbdc18b99cb50b83, type: 3}
+      propertyPath: stabilizeForce
+      value: 50
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:

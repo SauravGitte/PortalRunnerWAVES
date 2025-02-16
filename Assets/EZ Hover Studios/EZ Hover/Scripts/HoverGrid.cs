@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 namespace EZHover
@@ -15,7 +14,7 @@ namespace EZHover
         public float TargetHeight { get { return targetHeight; } set { targetHeight = value; } }
 
         [SerializeField] private LayerMask hoverableLayers = 1;
-        public LayerMask HoverableLayers { get { return hoverableLayers; } set { hoverableLayers = value; }}
+        public LayerMask HoverableLayers { get { return hoverableLayers; } set { hoverableLayers = value; } }
 
         [Header("Grid Settings")]
         [SerializeField] private Vector3 gridSize = new Vector3(10, 0.2f, 10);
@@ -29,29 +28,28 @@ namespace EZHover
         [SerializeField] private int rowCount = 3;
         public int RowCount { get { return rowCount; } set { rowCount = value; } }
 
-        [Header("Stabalization")]
+        [Header("Stabilization")]
+        [SerializeField] private float stabilizeForce = 10f;
+        public float StabilizeForce { get { return stabilizeForce; } set { stabilizeForce = value; } }
 
-        [Tooltip("Amount of torque force applied to stabalize the hover object.")]
-        [SerializeField] private float stabalizeForce = 10f;
-        public float StabalizeForce { get { return stabalizeForce; } set { stabalizeForce = value; } }
+        [SerializeField] private float stabilizationStrength = 1f;
+        public float StabilizationStrength { get { return stabilizationStrength; } set { stabilizationStrength = Mathf.Clamp01(value); } }
 
-        [SerializeField] private bool stabalizeZ = true;
-        public bool StabalizeZ { get { return stabalizeZ; } set { stabalizeZ = value; } }
+        [SerializeField] private bool stabilizeZ = true;
+        public bool StabilizeZ { get { return stabilizeZ; } set { stabilizeZ = value; } }
 
-        [SerializeField] private bool stabalizeX = false;
-        public bool StabalizeX { get { return stabalizeX; } set { stabalizeX = value; } }
+        [SerializeField] private bool stabilizeX = false;
+        public bool StabilizeX { get { return stabilizeX; } set { stabilizeX = value; } }
 
         [Header("Gizmo Settings")]
-        [SerializeField] bool alwaysRenderGizmos = false;
+        [SerializeField] private bool alwaysRenderGizmos = false;
+        [SerializeField] private Color gridColour = new Color(0, 1, 1, 0.5f);
 
-        [SerializeField] Color gridColour = new Color(0, 1, 1, 0.5f);
-
-        HoverPoint bestHoverPoint;
-        HoverPoint[,] points;
-        Vector3 usedGridSize;
-        Vector3 gridSquareBounds;
-
-        Rigidbody rb;
+        private HoverPoint bestHoverPoint;
+        private HoverPoint[,] points;
+        private Vector3 usedGridSize;
+        private Vector3 gridSquareBounds;
+        private Rigidbody rb;
 
         private void Awake()
         {
@@ -69,33 +67,33 @@ namespace EZHover
 
         private void FixedUpdate()
         {
-            if (rb == null)
-            {
-                return;
-            }
+            if (rb == null) return;
 
             FindBestHoverPoint();
             ApplyHoverForce();
-            Stabalize(Vector3.up);
+
+            Vector3 surfaceNormal = (bestHoverPoint != null && bestHoverPoint.DistanceFromGround != Mathf.Infinity)
+                ? bestHoverPoint.GroundNormal
+                : Vector3.up;
+
+            Stabilize(surfaceNormal);
         }
 
         private void Update()
         {
-            if (IsPrefab())
-                return;
+            if (IsPrefab()) return;
 
-            // Hover points must be regenerated if division count is changed
             if (points == null ||
                 points.GetLength(0) != columnCount ||
                 points.GetLength(1) != rowCount ||
                 points[0, 0] == null ||
                 usedGridSize != gridSize ||
-                points[0,0].HoverableLayers.value != hoverableLayers.value)
+                points[0, 0].HoverableLayers.value != hoverableLayers.value)
             {
                 GenerateHoverPoints();
             }
-			
-			if (Application.isEditor)
+
+            if (Application.isEditor)
             {
                 FindBestHoverPoint();
             }
@@ -116,13 +114,10 @@ namespace EZHover
 
             points = new HoverPoint[columnCount, rowCount];
 
-            // Reuse hoverpoints if any are available
             List<HoverPoint> reserves = new List<HoverPoint>(GetComponentsInChildren<HoverPoint>());
 
             bestHoverPoint = null;
 
-            // Creates hover points when needed
-            // Positions each point in a grid-like fashion on the plane
             for (int i = 0; i < columnCount; i++)
             {
                 float xPos = ((i * gridSquareBounds.x) + ((i + 1) * gridSquareBounds.x)) / 2;
@@ -153,7 +148,6 @@ namespace EZHover
                 }
             }
 
-            // Detroy extra hover points that are not in use
             while (reserves.Count > 0)
             {
                 HoverPoint toDestroy = reserves[0];
@@ -164,8 +158,6 @@ namespace EZHover
             usedGridSize = gridSize;
         }
 
-        // The 'best' hover point is one which has the closest hit distance to the ground
-        // It determines the height of the object above the ground
         private void FindBestHoverPoint()
         {
             if (bestHoverPoint != null)
@@ -178,12 +170,7 @@ namespace EZHover
                 for (int j = 0; j < points.GetLength(1); j++)
                 {
                     HoverPoint point = points[i, j];
-                    if (point == null )
-                    {
-                        continue;
-                    }
-
-                    if (point == bestHoverPoint) continue;
+                    if (point == null) continue;
 
                     point.Recalculate(targetHeight, rb);
 
@@ -197,97 +184,65 @@ namespace EZHover
 
         private void ApplyHoverForce()
         {
-            if (bestHoverPoint == null)
-            {
-                return;
-            }
+            if (bestHoverPoint == null || bestHoverPoint.DistanceFromGround == Mathf.Infinity) return;
 
-            if (bestHoverPoint.DistanceFromGround != Mathf.Infinity)
-            {
-                rb.AddForce(maxHoverThrust * (1f - (bestHoverPoint.DistanceFromGround / targetHeight)) * Vector3.up, ForceMode.Acceleration);
-            }
+            rb.AddForce(maxHoverThrust * (1f - (bestHoverPoint.DistanceFromGround / targetHeight)) * Vector3.up, ForceMode.Acceleration);
         }
 
-        // Tries to keep object level with the ground
-        private void Stabalize(Vector3 groundNormal)
+        private void Stabilize(Vector3 surfaceNormal)
         {
-            if (!stabalizeX && !stabalizeZ)
-            {
-                return;
-            }
+            if (!stabilizeX && !stabilizeZ) return;
 
-            var cross = Vector3.Cross(transform.up, groundNormal);
+            Vector3 cross = Vector3.Cross(transform.up, surfaceNormal);
+            Vector3 torque = new Vector3(
+                stabilizeX ? cross.x : 0f,
+                0f,
+                stabilizeZ ? cross.z : 0f
+            );
 
-            var turnDir = transform.InverseTransformDirection(cross);
-
-            if (stabalizeZ)
-            {
-                rb.AddTorque(transform.forward * turnDir.z * stabalizeForce * rb.mass);
-            }
-            
-            if (stabalizeX)
-            {
-                rb.AddTorque(transform.right * turnDir.x * stabalizeForce * rb.mass);
-            }            
+            rb.AddTorque(torque * stabilizeForce * stabilizationStrength, ForceMode.Acceleration);
         }
 
-        public Vector3 GetDirectionPointOnGridBounds(Vector3 dir)
+        // New method to get a point on the grid bounds in a specific direction
+        public Vector3 GetDirectionPointOnGridBounds(Vector3 direction)
         {
-            return transform.position + new Vector3(dir.x * (gridSize.x / 2), 0.0f, dir.z * (gridSize.z / 2));
+            Vector3 localDirection = transform.InverseTransformDirection(direction);
+            Vector3 gridExtents = gridSize / 2f;
+            Vector3 localPoint = new Vector3(
+                Mathf.Clamp(localDirection.x, -gridExtents.x, gridExtents.x),
+                0f,
+                Mathf.Clamp(localDirection.z, -gridExtents.z, gridExtents.z)
+            );
+            return transform.TransformPoint(localPoint);
         }
 
         private void OnDrawGizmos()
         {
-            if (alwaysRenderGizmos)
-            {
-                RenderGizmos();
-            }            
+            if (alwaysRenderGizmos) RenderGizmos();
         }
 
         private void OnDrawGizmosSelected()
         {
-            if (!alwaysRenderGizmos)
-            {
-                RenderGizmos();
-            }
+            if (!alwaysRenderGizmos) RenderGizmos();
         }
 
         private void RenderGizmos()
         {
-            if (points == null || IsPrefab())
-            {
-                return;
-            }
+            if (points == null || IsPrefab()) return;
 
             for (int i = 0; i < points.GetLength(0); i++)
             {
                 for (int j = 0; j < points.GetLength(1); j++)
                 {
                     HoverPoint point = points[i, j];
-                    if (point == null)
-                    {
-                        continue;
-                    }
+                    if (point == null) continue;
 
                     DrawRaycastLine(point);
                     DrawHitSphere(point);
-                }
-            }
-
-            for (int i = 0; i < points.GetLength(0); i++)
-            {
-                for (int j = 0; j < points.GetLength(1); j++)
-                {
-                    HoverPoint point = points[i, j];
-                    if (point == null)
-                    {
-                        continue;
-                    }
-
                     DrawGridSquare(point);
                 }
             }
-        }        
+        }
 
         private void DrawRaycastLine(HoverPoint point)
         {
@@ -297,17 +252,8 @@ namespace EZHover
 
         private void DrawHitSphere(HoverPoint point)
         {
-            Gizmos.color = Color.white;
-            if (point == bestHoverPoint && point.DistanceFromGround != Mathf.Infinity)
-            {
-                Gizmos.color = Color.green;
-            }
-            else if (point.DistanceFromGround != Mathf.Infinity)
-            {
-                Gizmos.color = Color.yellow;
-            }
-
-            Gizmos.DrawSphere(point.HitPos, 1f);
+            Gizmos.color = (point == bestHoverPoint && point.DistanceFromGround != Mathf.Infinity) ? Color.green : Color.yellow;
+            Gizmos.DrawSphere(point.HitPos, 0.1f);
         }
 
         private void DrawGridSquare(HoverPoint point)
