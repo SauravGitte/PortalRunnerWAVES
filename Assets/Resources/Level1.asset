@@ -29,7 +29,7 @@ MonoBehaviour:
         _poolParent: {fileID: 0}
       customPathGenerator: {fileID: 11400000, guid: 1e9f8c153ed53464f94b1c4041034f16, type: 2}
       spawnCount: 0
-      type: 1
+      type: 0
       randomizer: {fileID: 11400000, guid: fb600be43607d7e47822c78754644d57, type: 2}
       customShuffle: {fileID: 0}
       preventRepeat: 0
@@ -50,7 +50,7 @@ MonoBehaviour:
         _poolParent: {fileID: 0}
       customPathGenerator: {fileID: 11400000, guid: 1e9f8c153ed53464f94b1c4041034f16, type: 2}
       spawnCount: 0
-      type: 1
+      type: 0
       randomizer: {fileID: 11400000, guid: fb600be43607d7e47822c78754644d57, type: 2}
       customShuffle: {fileID: 0}
       preventRepeat: 0
