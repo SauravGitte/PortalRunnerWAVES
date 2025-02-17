@@ -10,6 +10,8 @@ public class Calamity : MonoBehaviour
     private Runner runner;
     private float currentSpeed;
     private float speedIncrement;
+    [SerializeField]
+    private SceneLoader loader;
 
     private void Start()
     {
@@ -40,8 +42,9 @@ public class Calamity : MonoBehaviour
         Debug.Log("Collided with " + other.gameObject.name);
         if (other.gameObject.CompareTag("Player"))
         {
-            Debug.Log("Game Over");
-            Time.timeScale = 0f;
+            Cursor.lockState = CursorLockMode.None; // Unlocks cursor
+            Cursor.visible = true;
+            loader.LoadScene("Main Menu");
         }
     }
 }
