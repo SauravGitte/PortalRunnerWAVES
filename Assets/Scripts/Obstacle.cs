@@ -17,16 +17,16 @@ public class Obstacle : MonoBehaviour
             if (hoverMovement != null)
             {
                 hoverMovement.MoveSpeed *= mult;
-                StartCoroutine(CooldownRoutine());
+                StartCoroutine(CooldownRoutine(hoverMovement));
             }
         }
     }
 
-
-    private IEnumerator CooldownRoutine()
+    private IEnumerator CooldownRoutine(HoverMovement hoverMovement)
     {
         canAffectPlayer = false;
         yield return new WaitForSeconds(cooldown);
+        hoverMovement.MoveSpeed /= mult; // Reset speed to normal
         canAffectPlayer = true;
     }
 }
