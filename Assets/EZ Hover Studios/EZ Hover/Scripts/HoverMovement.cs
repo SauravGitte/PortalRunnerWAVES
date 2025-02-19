@@ -5,15 +5,18 @@ namespace EZHover
     public class HoverMovement : MonoBehaviour
     {
         [Header("Movement Settings")]
-
         [SerializeField] private bool enableInput = true;
-        public bool EnableInput { get { return enableInput; } set { enableInput = value; } }        
+        public bool EnableInput { get { return enableInput; } set { enableInput = value; } }
 
         [SerializeField] private float moveSpeed = 10f;
         public float MoveSpeed { get { return moveSpeed; } set { moveSpeed = value; } }
 
-        [Header("Obstacle Avoidance")]
+        [Header("Steering Settings")]
+        [SerializeField] private float turnSpeed = 100f; // Speed at which the hoverboard turns
+        [SerializeField] private float maxTiltAngle = 30f; // Maximum tilt angle when steering
+        [SerializeField] private float tiltSpeed = 5f; // Speed at which the hoverboard tilts
 
+        [Header("Obstacle Avoidance")]
         [SerializeField] private bool enableObstacleAvoidance = true;
 
         [SerializeField] LayerMask obstacleLayers = 1;
@@ -37,7 +40,7 @@ namespace EZHover
         Rigidbody rb;
         HoverGrid hoverGrid;
 
-        Vector3 moveDir;
+        Vector3 moveDir; // Stores input direction (x for steering, y for throttle)
 
         private void Awake()
         {
@@ -68,65 +71,71 @@ namespace EZHover
                 return;
             }
 
-            Vector3 moveDir = GetMoveDirection();
+            // Get movement direction based on vertical input (throttle)
+            Vector3 moveForce = GetMoveDirection() * moveSpeed;
 
-            Vector3 start = hoverGrid.GetDirectionPointOnGridBounds(moveDir);
-
-            if (drawMoveDirectionLine)
+            // Handle obstacle avoidance
+            if (enableObstacleAvoidance)
             {
-                Debug.DrawLine(start, start + (moveDir * obstacleDetectionRange), Color.red);
-            }
-            
-            if (!enableObstacleAvoidance)
-            {
-                rb.AddForce(moveDir * moveSpeed, ForceMode.Acceleration);
-                return;
-            }
+                Vector3 start = hoverGrid.GetDirectionPointOnGridBounds(moveForce.normalized);
 
-            bool isHit = Physics.Raycast(start, moveDir, out RaycastHit hit, obstacleDetectionRange, obstacleLayers);
+                if (drawMoveDirectionLine)
+                {
+                    Debug.DrawLine(start, start + (moveForce.normalized * obstacleDetectionRange), Color.red);
+                }
 
-            if (isHit)
-            {
-                // Apply more repulsion and hover boost when closer to obstacle
-                float closenessMult = (1 - (hit.distance / obstacleDetectionRange));
+                bool isHit = Physics.Raycast(start, moveForce.normalized, out RaycastHit hit, obstacleDetectionRange, obstacleLayers);
 
-                Vector3 moveForce = moveDir * moveSpeed;
+                if (isHit)
+                {
+                    // Apply more repulsion and hover boost when closer to obstacle
+                    float closenessMult = (1 - (hit.distance / obstacleDetectionRange));
 
-                // More repulsion force applied when facing a steep incline
-                float steepnessMult = 1- Mathf.Clamp(Vector3.Dot(hit.normal, Vector3.up), 0.0f, 1.0f);
+                    // More repulsion force applied when facing a steep incline
+                    float steepnessMult = 1 - Mathf.Clamp(Vector3.Dot(hit.normal, Vector3.up), 0.0f, 1.0f);
 
-                Vector3 repulsionForce = -moveDir * closenessMult * repulsionSpeed * steepnessMult;
-                Vector3 hoverForce = new Vector3(0, hoverBoost * closenessMult, 0);
+                    Vector3 repulsionForce = -moveForce.normalized * closenessMult * repulsionSpeed * steepnessMult;
+                    Vector3 hoverForce = new Vector3(0, hoverBoost * closenessMult, 0);
 
-                rb.AddForce(repulsionForce + hoverForce + moveForce, ForceMode.Acceleration);
+                    rb.AddForce(repulsionForce + hoverForce + moveForce, ForceMode.Acceleration);
+                }
+                else
+                {
+                    rb.AddForce(moveForce, ForceMode.Acceleration);
+                }
             }
             else
             {
-                rb.AddForce(moveDir * moveSpeed, ForceMode.Acceleration);
+                rb.AddForce(moveForce, ForceMode.Acceleration);
             }
 
+            // Handle steering and tilt based on horizontal input
+            float steerInput = moveDir.x;
+
+            // Calculate new rotation angles
+            float newYaw = rb.rotation.eulerAngles.y + steerInput * turnSpeed * Time.fixedDeltaTime;
+            float newRoll = -steerInput * maxTiltAngle;
+
+            // Create target rotation with new yaw and roll
+            Quaternion targetRotation = Quaternion.Euler(newRoll, newYaw, rb.rotation.eulerAngles.z);
+
+            // Smoothly interpolate towards the target rotation
+            rb.MoveRotation(Quaternion.Slerp(rb.rotation, targetRotation, tiltSpeed * Time.fixedDeltaTime));
         }
+
         private Vector3 GetMoveDirection()
         {
-            Vector3 verticalDir = new Vector3(transform.forward.x, 0f, transform.forward.z).normalized;
-            Vector3 horizontalDir = new Vector3(transform.right.x, 0f, transform.right.z).normalized;
-
-            Vector3 verticalForce = verticalDir * moveDir.y;
-            Vector3 horizontalForce = horizontalDir * moveDir.x;
-
-            moveDir = Vector3.zero;
-
-            return verticalForce + horizontalForce;
+            // Use vertical input (moveDir.y) for forward/backward direction
+            Vector3 forwardDir = new Vector3(transform.forward.x, 0f, transform.forward.z).normalized;
+            return forwardDir * moveDir.y;
         }
 
-        public void Move(Vector2 moveDirection)
+        public void Move(Vector2 moveInput)
         {
-            if (!enableInput)
-            {
-                return;
-            }
+            if (!enableInput) return;
 
-            moveDir = moveDirection.normalized;
+            // Separate input into steering (x) and throttle (y)
+            moveDir = new Vector3(moveInput.x, moveInput.y, 0f);
         }
     }
 }
